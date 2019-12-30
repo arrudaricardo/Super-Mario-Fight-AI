@@ -1,16 +1,14 @@
 export function inputKeyboardHandle(
   { luigi, mario },
   speed,
-  cursors,
+  cursors,Wkey,Akey,Skey,Dkey,Spacekey,Shiftkey,
   { swingHammer },
   marioSwingTotal,
   luigiSwingTotal
 ) {
   // if (mario.body.onFloor()) && mario.play('jumping', true);
 
-  if (!cursors.shift.isDown) {
-    // hit with hammer
-    if (cursors.space.isDown) {
+    if (cursors.shift.isDown) {
       marioHammer(() => {
         swingHammer.apply(this, [mario]);
 
@@ -90,11 +88,10 @@ export function inputKeyboardHandle(
         }
       }
     }
-  } else {
     //LUIGI
 
     // hit with hammer
-    if (cursors.space.isDown) {
+    if (Spacekey.isDown) {
       luigiHammer(() => {
         swingHammer.apply(this, [luigi]);
         luigiSwingTotal = luigiSwingTotal + 1;
@@ -108,11 +105,11 @@ export function inputKeyboardHandle(
       });
     }
     //jumping
-    else if (cursors.up.isDown && luigi.body.touching.down) {
+    else if (Wkey.isDown && luigi.body.touching.down) {
       luigi.setVelocityY(-speed * 4);
     }
     //walk left
-    else if (cursors.left.isDown) {
+    else if (Akey.isDown) {
       luigi.data.values.facing = "left";
       luigi.setVelocityX(-speed);
       // if not in the air
@@ -123,7 +120,7 @@ export function inputKeyboardHandle(
       }
     }
     // walk right
-    else if (cursors.right.isDown) {
+    else if (Dkey.isDown) {
       luigi.data.values.facing = "right";
       luigi.setVelocityX(speed);
       // if not in the air
@@ -166,7 +163,7 @@ export function inputKeyboardHandle(
       }
     }
   }
-}
+
 
 let marioHammerThrottle = false;
 function marioHammer(callback) {

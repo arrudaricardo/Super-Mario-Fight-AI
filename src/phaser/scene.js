@@ -23,7 +23,6 @@ import fullscreenPath from "./assets/sprites/ui/fullscreen.png";
 
 //global variables
 let inputDevice =  "keyboard" || "socket";
-let socket;
 let debug = true
 let backgroundImage;
 let mario;
@@ -41,6 +40,12 @@ let gameOverText;
 let gameStats;
 let startTime;
 let endTime;
+let Wkey
+let Akey
+let Skey
+let Dkey
+let Spacekey
+let Shiftkey
 
 let marioSwingTotal = 0;
 let luigiSwingTotal = 0;
@@ -65,7 +70,8 @@ let miss3audio;
 let fightaudio;
 let marioScore = 0;
 let luigiScore = 0;
-let textScore;
+let marioTextScore;
+let luigiTextScore;
 let gameIsOver;
 let gameCodeText;
 let muteBtn;
@@ -149,6 +155,20 @@ function create() {
   winnerHitPercentage = 0;
   loserHitPercentage = 0;
 
+
+  //create keys
+  Wkey = this.input.keyboard.addKey('W');  
+  Akey = this.input.keyboard.addKey('A');  
+  Skey = this.input.keyboard.addKey('S');  
+  Dkey = this.input.keyboard.addKey('D');  
+
+  Shiftkey = this.input.keyboard.addKey('SHIFT');  
+  Spacekey = this.input.keyboard.addKey('SPACE');  
+
+  // add a keyboard as cursor
+  cursors = this.input.keyboard.createCursorKeys();
+
+
   startTime = this.time.now;
   // load background
   backgroundImage = this.add
@@ -158,18 +178,18 @@ function create() {
     .setInteractive();
   backgroundImage.smoothed = true;
 
-  //mute button
+  //mute/speaker button
   muteBtn = this.add
     .rectangle()
     .setOrigin(0, 0)
     .setInteractive();
-  muteBtn.setPosition(width - 183, 9);
+  muteBtn.setPosition(width - 30, 9);
   muteBtn.setDisplaySize(30, 30);
   muteBtn.setFillStyle(1, 0);
   muteBtn.on("pointerdown", () => toggleMute.apply(this));
 
   muteImg = this.add
-    .image(width - 180, 10, "mute")
+    .image(width - 30, 10, "mute")
     .setScale(0.45)
     .setOrigin(0, 0);
   muteImg.setVisible(false);
@@ -177,7 +197,7 @@ function create() {
   // muteBtn.on('pointerdown', () => unmuteGame.apply(this))
 
   speakerImg = this.add
-    .image(width - 182, 10, "speaker")
+    .image(width - 31, 10, "speaker")
     .setOrigin(0, 0)
     .setScale(0.45);
   speakerImg.setVisible(true);
@@ -240,12 +260,10 @@ function create() {
   gameCodeText.setOrigin(0.5);
   gameCodeText.setColor("#34d2eb");
   gameCodeText.setFontSize(15);
-  // gameCodeText.setShadow(3, 3, 'rgba(0,0,0,0.5)', 2)
   gameCodeText.x = width - 59;
   gameCodeText.y = 18;
-  gameCodeText.text = `Room: ${gameState ? gameState.code : "#TEST"}`;
 
-  //default facing
+  //default facing data
   luigi.setData("facing", "right");
   mario.setData("facing", "left");
 
@@ -281,18 +299,27 @@ function create() {
   gameOverText.setY(height / 2);
 
   // game score text
-  textScore = this.add.text();
+  marioTextScore = this.add.text();
+  luigiTextScore = this.add.text();
   // textScore.setFont('Press Start 2P')
-  textScore.setOrigin(0.5);
-  textScore.setX(300);
-  textScore.setY(40);
+  luigiTextScore.setOrigin(0.5);
+  luigiTextScore.setX(100);
+  luigiTextScore.setY(55);
+
+  marioTextScore.setOrigin(0.5);
+  marioTextScore.setX(800);
+  marioTextScore.setY(55);
   // textScore.setPadding(10,40,10,10)
-  textScore.setFontSize(27);
+  marioTextScore.setFontSize(27);
+  luigiTextScore.setFontSize(27);
   // textScore.setLineSpacing(20);
-  textScore.setColor("#E0E4E4");
+  marioTextScore.setColor("#E0E4E4");
+  luigiTextScore.setColor("#E0E4E4");
   // textScore.setStroke("#fffff", 1);
-  textScore.setShadow(1, 1, "rgba(29,76,219,0.9)", 0);
-  textScore.text = `${mario.name}: ${marioScore}   ${luigi.name}: ${luigiScore}`;
+  marioTextScore.setShadow(1, 1, "rgba(29,76,219,0.9)", 0);
+  luigiTextScore.setShadow(1, 1, "rgba(29,76,219,0.9)", 0);
+  marioTextScore.text = `${mario.name}: ${marioScore}`
+  luigiTextScore.text = `${luigi.name}: ${luigiScore}`
 
   //set default hitbox size
   mario.setSize(14, 31);
@@ -356,11 +383,10 @@ function create() {
   }
 
   renderSprites.apply(this, [luigi, mario]);
-  // add a keyboard as cursor
-  cursors = this.input.keyboard.createCursorKeys();
 
+  //fullscreen 
   fullscreenButton = this.add
-    .image(width - 190, 8, "fullscreen", 0)
+    .image(width - 38, 8, "fullscreen", 0)
     .setOrigin(1, 0)
     .setInteractive();
   fullscreenButton.setCrop(1.2, 1, 27, 27);
@@ -389,7 +415,7 @@ function update() {
       inputKeyboardHandle.apply(this, [
         { mario, luigi },
         speed,
-        cursors,
+        cursors,Wkey,Akey,Skey,Dkey,Spacekey,Shiftkey,
         { swingHammer },
         marioSwingTotal,
         luigiSwingTotal
@@ -437,7 +463,9 @@ function gameOver() {
         loserHitPercentage = marioHitPercentage;
       }
 
-      textScore.text = `${mario.name}: ${marioScore}\n${luigi.name}: ${luigiScore}`;
+      //update text game score
+      marioTextScore.text = `${mario.name}: ${marioScore}`
+      luigiTextScore.text = `${luigi.name}: ${luigiScore}`;
 
       setTimeout(() => this.scene.restart(), 5000);
 
