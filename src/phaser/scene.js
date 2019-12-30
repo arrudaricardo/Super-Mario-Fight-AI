@@ -23,7 +23,7 @@ import fullscreenPath from "./assets/sprites/ui/fullscreen.png";
 
 //global variables
 let inputDevice =  "keyboard" || "socket";
-let debug = true
+let debug = false
 let backgroundImage;
 let mario;
 let luigi;
