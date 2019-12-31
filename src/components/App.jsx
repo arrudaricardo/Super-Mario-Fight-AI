@@ -1,10 +1,9 @@
 import React from "react";
-import Game from './Game'
-
+import Index from './Index'
 
 function App() {
   return (
-      <Game/>
+    <Index/>
 	);
 }
 
