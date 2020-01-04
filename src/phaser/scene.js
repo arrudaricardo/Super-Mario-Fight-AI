@@ -309,13 +309,10 @@ function create() {
   marioTextScore.setOrigin(0.5);
   marioTextScore.setX(800);
   marioTextScore.setY(55);
-  // textScore.setPadding(10,40,10,10)
   marioTextScore.setFontSize(27);
   luigiTextScore.setFontSize(27);
-  // textScore.setLineSpacing(20);
   marioTextScore.setColor("#E0E4E4");
   luigiTextScore.setColor("#E0E4E4");
-  // textScore.setStroke("#fffff", 1);
   marioTextScore.setShadow(1, 1, "rgba(29,76,219,0.9)", 0);
   luigiTextScore.setShadow(1, 1, "rgba(29,76,219,0.9)", 0);
   marioTextScore.text = `${mario.name}: ${marioScore}`
