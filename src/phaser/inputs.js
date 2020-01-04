@@ -65,8 +65,6 @@ export function inputKeyboardHandle(
 
         // mario is going up
         if (!mario.body.touching.down && mario.body.facing === 11) {
-          // check prevFacing
-          // if (currentAction(mario) !== 'hammer'){
           if (mario.data.values.facing === "right") {
             mario.play("m-jump-right", 1).setCrop(0, 1, 43, 42);
           }
